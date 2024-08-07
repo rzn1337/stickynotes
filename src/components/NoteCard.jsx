@@ -6,7 +6,11 @@ function NoteCard({ note }) {
   const default_position = JSON.parse(note.position);
   const colors = JSON.parse(note.colors);
 
-  const [position, setPosition] = useState(default_position)
+  const [position, setPosition] = useState(default_position);
+
+  let mouseStartPos = { x: 0, y: 0 };
+
+  const cardRef = useRef(null);
 
   const textAreaRef = useRef(null);
 
@@ -20,8 +24,37 @@ function NoteCard({ note }) {
     autoGrow(textAreaRef);
   }, []);
 
+  const mouseMove = (e) => {
+    const mouseMoveDir = {
+      x: mouseStartPos.x - e.clientX,
+      y: mouseStartPos.y - e.clientY,
+    };
+
+    mouseStartPos.x = e.clientX;
+    mouseStartPos.y = e.clientY;
+
+    setPosition({
+      x: cardRef.current.offsetLeft - mouseMoveDir.x,
+      y: cardRef.current.offsetTop - mouseMoveDir.y,
+    });
+  };
+
+  const mouseDown = (e) => {
+    mouseStartPos.x = e.clientX;
+    mouseStartPos.y = e.clientY;
+
+    document.addEventListener("mousemove", mouseMove);
+    document.addEventListener("mouseup", mouseUp);
+  };
+
+  const mouseUp = () => {
+    document.removeEventListener("mousemove", mouseMove);
+    document.removeEventListener("mouseup", mouseUp);
+};
+
   return (
     <div
+      ref={cardRef}
       className="card"
       style={{
         backgroundColor: colors.colorBody,
@@ -30,6 +63,7 @@ function NoteCard({ note }) {
       }}
     >
       <div
+        onMouseDown={mouseDown}
         className="card-header"
         style={{ backgroundColor: colors.colorHeader }}
       >
