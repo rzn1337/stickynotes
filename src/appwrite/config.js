@@ -40,7 +40,20 @@ export class Service {
                 payload
                 )
         } catch (error) {
-            console.error("Apprwite Service :: getNotes :: error", error)
+            console.error("Apprwite Service :: updateNote :: error", error)
+            return false
+        }
+    }
+
+    async deleteNote (noteID) {
+        try {
+            return await this.databases.updateDocument(
+                conf.appwriteDatabaseId, 
+                conf.appwriteCollectionId,
+                noteID 
+                )
+        } catch (error) {
+            console.error("Apprwite Service :: deleteNote :: error", error)
             return false
         }
     }
