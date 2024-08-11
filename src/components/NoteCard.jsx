@@ -1,13 +1,18 @@
 import React, { useRef, useEffect, useState } from "react";
-import Trash from "../icons/Trash";
-import { setNewOffset, autoGrow, setZIndex } from "../utils";
+import { Trash, Spinner } from "../icons";
+import { setNewOffset, autoGrow, setZIndex, bodyParser } from "../utils";
+import { service as appwriteService } from "../appwrite/config";
 
 function NoteCard({ note }) {
-  const body = JSON.parse(note.body);
-  const default_position = JSON.parse(note.position);
-  const colors = JSON.parse(note.colors);
+  const body = bodyParser(note.body);
+  const default_position = bodyParser(note.position);
+  const colors = bodyParser(note.colors);
+
+  const keyUpTimer = useRef(null);
 
   const [position, setPosition] = useState(default_position);
+
+  const [saving, setSaving] = useState(false);
 
   let mouseStartPos = { x: 0, y: 0 };
 
@@ -28,7 +33,7 @@ function NoteCard({ note }) {
     mouseStartPos.x = e.clientX;
     mouseStartPos.y = e.clientY;
 
-    const newPosition = setNewOffset(cardRef.current, mouseMoveDir)
+    const newPosition = setNewOffset(cardRef.current, mouseMoveDir);
 
     setPosition(newPosition);
   };
@@ -40,14 +45,37 @@ function NoteCard({ note }) {
     document.addEventListener("mousemove", mouseMove);
     document.addEventListener("mouseup", mouseUp);
 
-    setZIndex(cardRef.current)
-
+    setZIndex(cardRef.current);
   };
 
   const mouseUp = () => {
     document.removeEventListener("mousemove", mouseMove);
     document.removeEventListener("mouseup", mouseUp);
-};
+
+    const newPosition = setNewOffset(cardRef.current);
+    saveData("position", newPosition);
+  };
+
+  const saveData = (key, value) => {
+    const payload = { [key]: JSON.stringify(value) };
+
+    appwriteService.updateNote(note.$id, payload);
+
+    setSaving(false);
+  };
+
+  const handleKeyUp = (e) => {
+
+    setSaving(true);
+
+    if (keyUpTimer.current) {
+      clearTimeout(keyUpTimer.current);
+    }
+
+    keyUpTimer = setTimeout(() => {
+      saveData("body", textAreaRef.current.value);
+    }, 1000);
+  };
 
   return (
     <div
@@ -65,9 +93,16 @@ function NoteCard({ note }) {
         style={{ backgroundColor: colors.colorHeader }}
       >
         <Trash />
+        {saving && (
+          <div className="card-saving">
+            <Spinner color={colors.colorText}/>
+            <span style={{ color: colors.colorText }}>Saving...</span>
+          </div>
+        )}
       </div>
       <div className="card-body">
         <textarea
+          onKeyUp={handleKeyUp}
           ref={textAreaRef}
           style={{ color: colors.colorText }}
           defaultValue={body}
@@ -75,7 +110,7 @@ function NoteCard({ note }) {
             autoGrow(textAreaRef);
           }}
           onFocus={() => {
-            setZIndex(cardRef.current)
+            setZIndex(cardRef.current);
           }}
         ></textarea>
       </div>
