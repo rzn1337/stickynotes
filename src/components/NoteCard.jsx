@@ -1,15 +1,18 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import { Spinner } from "../icons";
 import DeleteButton from "./DeleteButton";
 import { setNewOffset, autoGrow, setZIndex, bodyParser } from "../utils";
 import { service as appwriteService } from "../appwrite/config";
+import { NoteContext } from "../context/NoteContext";
 
-function NoteCard({ note, setNotes }) {
+function NoteCard({ note }) {
   const body = bodyParser(note.body);
   const default_position = bodyParser(note.position);
   const colors = bodyParser(note.colors);
 
   const keyUpTimer = useRef(null);
+
+  const { setSelectedNote } = useContext(NoteContext);
 
   const [position, setPosition] = useState(default_position);
 
@@ -23,6 +26,7 @@ function NoteCard({ note, setNotes }) {
 
   useEffect(() => {
     autoGrow(textAreaRef);
+    setZIndex(cardRef.current);
   }, []);
 
   const mouseMove = (e) => {
@@ -43,6 +47,8 @@ function NoteCard({ note, setNotes }) {
     if (e.target.className === "card-header") {
       setZIndex(cardRef.current);
 
+      setSelectedNote(note)
+
       mouseStartPos.x = e.clientX;
       mouseStartPos.y = e.clientY;
 
@@ -57,6 +63,7 @@ function NoteCard({ note, setNotes }) {
 
     const newPosition = setNewOffset(cardRef.current);
     saveData("position", newPosition);
+
   };
 
   const saveData = (key, value) => {
@@ -94,7 +101,7 @@ function NoteCard({ note, setNotes }) {
         className="card-header"
         style={{ backgroundColor: colors.colorHeader }}
       >
-        <DeleteButton noteID={note.$id} setNotes={setNotes} />
+        <DeleteButton noteID={note.$id} />
         {saving && (
           <div className="card-saving">
             <Spinner color={colors.colorText} />
@@ -113,6 +120,7 @@ function NoteCard({ note, setNotes }) {
           }}
           onFocus={() => {
             setZIndex(cardRef.current);
+            setSelectedNote(note)
           }}
         ></textarea>
       </div>

@@ -1,26 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 // import { fakeData as notes } from "../assets/testData";
 import NoteCard from "../components/NoteCard";
-import { service as appwriteService } from "../appwrite/config";
+import { NoteContext } from "../context/NoteContext";
+import Controls from "../components/Controls";
 
 function NotesPage() {
-
-  const [notes, setNotes] = useState([])
-
-  useEffect(() => {
-    init()
-  }, [])
-
-  const init = async () => {
-    const response = await appwriteService.getNotes()
-    setNotes(response.documents)
-  }
+  const { notes } = useContext(NoteContext);
 
   return (
     <div>
       {notes.map((note) => (
-        <NoteCard key={note.$id} note={note} setNotes={setNotes} />
+        <NoteCard key={note.$id} note={note} />
       ))}
+      <Controls />
     </div>
   );
 }
