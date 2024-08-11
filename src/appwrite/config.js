@@ -47,7 +47,7 @@ export class Service {
 
     async deleteNote (noteID) {
         try {
-            return await this.databases.updateDocument(
+            return await this.databases.deleteDocument(
                 conf.appwriteDatabaseId, 
                 conf.appwriteCollectionId,
                 noteID 

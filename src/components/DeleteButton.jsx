@@ -5,6 +5,7 @@ import { service as appwriteService } from "../appwrite/config";
 function DeleteButton({ noteID, setNotes }) {
   const handleDelete = () => {
     setNotes((notes) => notes.filter((note) => note.$id !== noteID))
+    appwriteService.deleteNote(noteID)
   };
 
   return (
