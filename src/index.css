@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+
+* {
+  @apply transition-colors duration-1000
+}
+
+html {
+  transition: background-color 1s ease, background-image 1s ease;
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -23,10 +32,10 @@ body {
 
 @keyframes spin {
   from {
-      transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   to {
-      transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
@@ -40,24 +49,14 @@ body {
   gap: 5px;
 }
 
-#app {
-  background-color: #212228;
-  background-image: linear-gradient(#292a30 0.1em, transparent 0.1em),
-    linear-gradient(90deg, #292a30 0.1em, transparent 0.1em);
-  background-size: 4em 4em;
-  height: 100vh;
-  position: relative;
-  overflow: auto;
-}
-
 .card {
   position: absolute;
   width: 400px;
   border-radius: 5px;
   cursor: pointer;
-  box-shadow: 0 1px 1px hsl(0deg 0% 0% / 0.075), 0 2px 2px hsl(0deg 0% 0% /
-                  0.075), 0 4px 4px hsl(0deg 0% 0% / 0.075), 0 8px 8px hsl(0deg
-                  0% 0% / 0.075), 0 16px 16px hsl(0deg 0% 0% / 0.075);
+  box-shadow: 0 1px 1px hsl(0deg 0% 0% / 0.075),
+    0 2px 2px hsl(0deg 0% 0% / 0.075), 0 4px 4px hsl(0deg 0% 0% / 0.075),
+    0 8px 8px hsl(0deg 0% 0% / 0.075), 0 16px 16px hsl(0deg 0% 0% / 0.075);
 }
 
 .card-body {
@@ -102,9 +101,9 @@ textarea:focus {
   background-color: #35363e;
   padding: 1em 1em;
   border-radius: 40px;
-  box-shadow: 0 1px 1px hsl(0deg 0% 0% / 0.075), 0 2px 2px hsl(0deg 0% 0% /
-                  0.075), 0 4px 4px hsl(0deg 0% 0% / 0.075), 0 8px 8px hsl(0deg
-                  0% 0% / 0.075), 0 16px 16px hsl(0deg 0% 0% / 0.075);
+  box-shadow: 0 1px 1px hsl(0deg 0% 0% / 0.075),
+    0 2px 2px hsl(0deg 0% 0% / 0.075), 0 4px 4px hsl(0deg 0% 0% / 0.075),
+    0 8px 8px hsl(0deg 0% 0% / 0.075), 0 16px 16px hsl(0deg 0% 0% / 0.075);
   z-index: 1000000;
 }
 
