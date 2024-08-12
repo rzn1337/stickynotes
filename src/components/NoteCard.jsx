@@ -47,7 +47,7 @@ function NoteCard({ note }) {
     if (e.target.className === "card-header") {
       setZIndex(cardRef.current);
 
-      setSelectedNote(note)
+      setSelectedNote(note);
 
       mouseStartPos.x = e.clientX;
       mouseStartPos.y = e.clientY;
@@ -63,7 +63,6 @@ function NoteCard({ note }) {
 
     const newPosition = setNewOffset(cardRef.current);
     saveData("position", newPosition);
-
   };
 
   const saveData = (key, value) => {
@@ -81,7 +80,7 @@ function NoteCard({ note }) {
       clearTimeout(keyUpTimer.current);
     }
 
-    keyUpTimer = setTimeout(() => {
+    keyUpTimer.current = setTimeout(() => {
       saveData("body", textAreaRef.current.value);
     }, 1000);
   };
@@ -120,7 +119,7 @@ function NoteCard({ note }) {
           }}
           onFocus={() => {
             setZIndex(cardRef.current);
-            setSelectedNote(note)
+            setSelectedNote(note);
           }}
         ></textarea>
       </div>
