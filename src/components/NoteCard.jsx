@@ -4,7 +4,6 @@ import DeleteButton from "./DeleteButton";
 import { setNewOffset, autoGrow, setZIndex, bodyParser } from "../utils";
 import { service as appwriteService } from "../appwrite/config";
 import { NoteContext } from "../context/NoteContext";
-import UpDownButton from "./SliderButton";
 import SliderButton from "./SliderButton";
 
 function NoteCard({ note }) {
@@ -12,7 +11,7 @@ function NoteCard({ note }) {
   const default_position = bodyParser(note.position);
   const colors = bodyParser(note.colors);
 
-  const [isUp, setIsUp] = useState(false)
+  const [isUp, setIsUp] = useState(false);
 
   const keyUpTimer = useRef(null);
 
@@ -106,9 +105,8 @@ function NoteCard({ note }) {
       >
         <div className="flex space-x-0">
           <DeleteButton noteID={note.$id} />
-          <SliderButton isUp={isUp} setIsUp={setIsUp} />
+          <SliderButton isUp={isUp} setIsUp={setIsUp} ref={textAreaRef} />
         </div>
-
         {saving && (
           <div className="card-saving">
             <Spinner color={colors.colorText} />
@@ -116,8 +114,13 @@ function NoteCard({ note }) {
           </div>
         )}
       </div>
-      <div className="card-body">
+      <div
+        className={`card-body transition-all duration-3000 ease-out overflow-hidden
+    ${!isUp ? "max-h-[1000px] opacity-100 p-4" : "max-h-0 opacity-0 px-4 py-0"}`}
+      >
         <textarea
+          className={`w-full resize-none text-base transition-all duration-3000 ease-linear
+        ${isUp ? "p-0" : ""}`}
           onKeyUp={handleKeyUp}
           ref={textAreaRef}
           style={{ color: colors.colorText }}

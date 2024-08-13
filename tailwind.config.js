@@ -18,6 +18,9 @@ export default {
       backgroundSize: {
         'custom-pattern': '5em 5em',
       },
+      transitionDuration: {
+        '3000': '3000ms', // Adds a custom duration of 3000ms
+      },
     },
   },
   plugins: [],
