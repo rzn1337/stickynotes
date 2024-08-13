@@ -4,11 +4,15 @@ import DeleteButton from "./DeleteButton";
 import { setNewOffset, autoGrow, setZIndex, bodyParser } from "../utils";
 import { service as appwriteService } from "../appwrite/config";
 import { NoteContext } from "../context/NoteContext";
+import UpDownButton from "./SliderButton";
+import SliderButton from "./SliderButton";
 
 function NoteCard({ note }) {
   const body = bodyParser(note.body);
   const default_position = bodyParser(note.position);
   const colors = bodyParser(note.colors);
+
+  const [isUp, setIsUp] = useState(false)
 
   const keyUpTimer = useRef(null);
 
@@ -100,7 +104,11 @@ function NoteCard({ note }) {
         className="card-header"
         style={{ backgroundColor: colors.colorHeader }}
       >
-        <DeleteButton noteID={note.$id} />
+        <div className="flex space-x-0">
+          <DeleteButton noteID={note.$id} />
+          <SliderButton isUp={isUp} setIsUp={setIsUp} />
+        </div>
+
         {saving && (
           <div className="card-saving">
             <Spinner color={colors.colorText} />

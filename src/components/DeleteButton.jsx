@@ -4,10 +4,11 @@ import { service as appwriteService } from "../appwrite/config";
 import { NoteContext } from "../context/NoteContext";
 
 function DeleteButton({ noteID }) {
-  const { setNotes } = useContext(NoteContext);
+  const { setNotes, setSelectedNote } = useContext(NoteContext);
   const handleDelete = () => {
     setNotes((notes) => notes.filter((note) => note.$id !== noteID));
     appwriteService.deleteNote(noteID);
+    setSelectedNote(null)
   };
 
   return (
