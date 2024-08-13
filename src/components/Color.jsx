@@ -7,24 +7,29 @@ function Color({ color }) {
   const { selectedNote, notes, setNotes } = useContext(NoteContext);
 
   const changeColor = () => {
-    try {
-      const currentNoteIndex = notes.findIndex(
-        (note) => note.$id === selectedNote.$id
-      );
-      const updatedNote = {
-        ...notes[currentNoteIndex],
-        colors: JSON.stringify(color),
-      };
+    
+      try {
 
-    appwriteService.updateNote(updatedNote.$id, {colors: JSON.stringify(color)})
-      
+        if (selectedNote === null || selectedNote === undefined) throw new Error
 
-      const newNotes = [...notes];
-      newNotes[currentNoteIndex] = updatedNote;
-      setNotes(newNotes);
-    } catch (error) {
-      alert("Select a note to change color");
-    }
+        const currentNoteIndex = notes.findIndex(
+          (note) => note.$id === selectedNote.$id
+        );
+        const updatedNote = {
+          ...notes[currentNoteIndex],
+          colors: JSON.stringify(color),
+        };
+
+        appwriteService.updateNote(updatedNote.$id, {
+          colors: JSON.stringify(color),
+        });
+
+        const newNotes = [...notes];
+        newNotes[currentNoteIndex] = updatedNote;
+        setNotes(newNotes);
+      } catch (error) {
+        alert("Select a note to change color");
+      }
   };
 
   return (
